@@ -3,7 +3,7 @@ export type Repo = {
     description: string,
     html_url: string,
     stargazers_count: number,
-    language: any
+    language: string
 };
 
 export type SearchResponse<T> = {
