@@ -3,6 +3,15 @@
 import axios from "axios";
 import type { Repo, SearchResponse } from "./types.js";
 
+
+const languages = ["Rust", "JavaScript", "TypeScript", "PHP", "Python", "C", "C++", "C#", "Shell", "Cobol"];
+
+const query = [
+    "stars:>1000",
+    `${languages.map(l => `language:${l}`).join(" ")}`
+].join(" ");
+
+
 const getData = async (): Promise<Repo[]|null> => {
     try {
         const { data } = await axios.get<SearchResponse<Repo>>(
@@ -13,7 +22,9 @@ const getData = async (): Promise<Repo[]|null> => {
                     "User-Agent": "github-cli-tool"
                 },
                 params: {
-                    q: "stars:>1000",
+                    q:query,
+                    sort: "stars",
+                    order: "desc",
                     per_page: 10
                 }
             }
@@ -36,16 +47,16 @@ const parseData = async (repos: Repo[] | null): Promise<Repo[] | string> => {
     return repos.map((repo: Repo) => ({
         full_name: repo.full_name,
         description: repo.description,
-        url: repo.url,
-        stargazers_url: repo.stargazers_url,
-        languages_url: repo.languages_url
+        html_url: repo.html_url,
+        stargazers_count: repo.stargazers_count,
+        language: repo.language
     }));
 };
 
 try {
     const repos = await getData();
     const dataToReturn =  await parseData(repos);
-    console.log(dataToReturn.length);
+    console.log(dataToReturn);
 } catch (e:any) {
     console.log(e);
 }
