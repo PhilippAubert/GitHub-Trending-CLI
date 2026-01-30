@@ -21,7 +21,8 @@
       "noUncheckedSideEffectImports": true,
       "moduleDetection": "force",
       "skipLibCheck": true,
-      "removeComments": false
+      "removeComments": true
     },
-    "include": ["src"]
+    "include": ["src"],
+    "exclude": ["src/types.ts"]
   }

@@ -4,7 +4,7 @@
   "main": "dist/app.js",
   "scripts": {
     "build": "tsc && chmod +x dist/app.js",
-    "dev": "tsc-watch --project tsconfig.json --onSuccess \"nodemon dist/bin/www.js\"",
+    "dev": "tsc-watch --project tsconfig.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
@@ -28,5 +28,6 @@
     "commander": "^14.0.2",
     "dotenv": "^17.2.3",
     "tsc-watch": "^7.2.0"
-  }
+  },
+  "type":"module"
 }
