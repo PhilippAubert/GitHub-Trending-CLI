@@ -1,10 +1,10 @@
-
 import axios from "axios";
 import { query } from "./languageHelper.js";
 import type { Repo, SearchResponse } from "./types.js";
+import type { OptionValues } from "commander";
 
 
-export const getData = async (): Promise<Repo[]|null> => {
+export const getData = async (args:OptionValues | null): Promise<Repo[]|null> => {
     try {
         const { data } = await axios.get<SearchResponse<Repo>>(
             "https://api.github.com/search/repositories",
@@ -17,7 +17,8 @@ export const getData = async (): Promise<Repo[]|null> => {
                     q:query,
                     sort: "stars",
                     order: "desc",
-                    per_page: 10
+                    per_page: args?.["limit"] ? Number(args?.["limit"]) : 10,
+                    page: 1
                 }
             }
         );
