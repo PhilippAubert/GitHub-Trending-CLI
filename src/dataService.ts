@@ -1,11 +1,16 @@
-
 import axios from "axios";
-import { query } from "./languageHelper.js";
+import type { OptionValues } from "commander";
+
 import type { Repo, SearchResponse } from "./types.js";
 
+import { durationToDate, formatDate } from "./dateHelper.js";
+import { languageQuery } from "./languageHelper.js";
 
-export const getData = async (): Promise<Repo[]|null> => {
-    try {
+
+export const getData = async (args: OptionValues | null): Promise<Repo[]|null> => {
+    const sinceDate = durationToDate(args?.["duration"]); // e.g., 2026-01-01
+    const query = `${languageQuery} created:>${sinceDate} stars:>1000`;
+        try {
         const { data } = await axios.get<SearchResponse<Repo>>(
             "https://api.github.com/search/repositories",
             {
@@ -17,7 +22,8 @@ export const getData = async (): Promise<Repo[]|null> => {
                     q:query,
                     sort: "stars",
                     order: "desc",
-                    per_page: 10
+                    per_page: args?.["limit"] ? Number(args?.["limit"]) : 10,
+                    page: 1
                 }
             }
         );
@@ -32,12 +38,13 @@ export const getData = async (): Promise<Repo[]|null> => {
     }
 };
 
-export const parseData = async (repos: Repo[] | null): Promise<Repo[] | undefined> => {
-    return repos?.map((repo: Repo) => ({
+export const parseData = async (repos: Repo[]): Promise<Repo[]> => {
+    return repos?.map((repo) => ({
         full_name: repo.full_name,
         description: repo.description,
         html_url: repo.html_url,
         stargazers_count: repo.stargazers_count,
-        language: repo.language
+        language: repo.language,
+        created_at: formatDate(repo.created_at)
     }));
 };
