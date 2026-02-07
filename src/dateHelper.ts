@@ -1,6 +1,6 @@
 type Duration = "day" | "week" | "month" | "year";
 
-export const durationToDate = (duration: Duration): string | undefined => {
+export const durationToDate = (duration: Duration): string => {
     const now = new Date();
 
     switch (duration) {
@@ -21,6 +21,6 @@ export const durationToDate = (duration: Duration): string | undefined => {
     return `created:>${now.toISOString().split("T")[0]}`;
 };
 
-export const formatDate = (iso: string): any => {
+export const formatDate = (iso: string): any  => {
     return new Date(iso).toISOString().split("T")[0];
 };

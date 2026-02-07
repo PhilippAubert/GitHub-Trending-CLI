@@ -3,13 +3,15 @@ import type { OptionValues } from "commander";
 
 import type { Repo, SearchResponse } from "./types.js";
 
-import { durationToDate, formatDate } from "./dateHelper.js";
+import {  durationToDate, formatDate } from "./dateHelper.js";
 import { languageQuery } from "./languageHelper.js";
 
 
 export const getData = async (args: OptionValues | null): Promise<Repo[]|null> => {
-    const sinceDate = durationToDate(args?.["duration"]); // e.g., 2026-01-01
-    const query = `${languageQuery} created:>${sinceDate} stars:>1000`;
+    const sinceDate = durationToDate(args?.["duration"]);
+    const query = sinceDate ? 
+        `${languageQuery} ${sinceDate}` : 
+        languageQuery;
         try {
         const { data } = await axios.get<SearchResponse<Repo>>(
             "https://api.github.com/search/repositories",
@@ -30,7 +32,7 @@ export const getData = async (args: OptionValues | null): Promise<Repo[]|null> =
         return data.items;
     } catch (e) {
         if (axios.isAxiosError(e)) {
-            console.error(
+            console.error(e,
                 `GitHub API error ${e.response?.status}: ${e.response?.data.message}`
             );
         }

@@ -15,7 +15,8 @@ try {
                 "Description": element.description,
                 "URL": element.html_url,
                 "Language": element.language,
-                "Started": element.created_at
+                "Started": element.created_at,
+                "Stars": element.stargazers_count
             }
         ));
     }
